@@ -19,7 +19,12 @@ module.exports = {
 		/**
 		 * S3 Secret Key
 		 */
-		secretKey : "---SECRET_KEY---"
+		secretKey : "---SECRET_KEY---",
+
+		/**
+		 * API version
+		 */
+		apiVersion : "2012-09-25"
 	},
 
 	/**
@@ -39,16 +44,21 @@ module.exports = {
 		/**
 		 * S3 bucket
 		 */
-		bucket : "---bucket-name---",
+		bucket : "miimove-thumbnails",
 
 		/**
 		 * Server region
 		 */
-		region : "us-east-1",
-
+		region : "us-east-1"
+	},
+	
+	/**
+	 * Cloudfront config
+	 */
+	cloudfront : {
 		/**
-		 * API version
+		 * Cloudfront url
 		 */
-		apiVersion : "2012-09-25"
+		url : "https://dzbg8ac69eg2r.cloudfront.net",
 	}
 };
