@@ -6,6 +6,7 @@ _.mixin(_.str.exports());
 var AWS = require("aws-sdk");
 var url = require("url");
 var async = require("async");
+var mime = require("mime-types");
 
 var config = require("../config");
 
@@ -54,6 +55,62 @@ function parseActions(urlFrag) {
 	return actions;
 }
 
+function getObject(s3, options, pathname, actions, cb) {
+	console.log("Retrieving object... ");
+	console.log(options);
+	
+	s3.getObject(options, function(err, data) {
+		if (err) {
+			return cb(err);
+		}
+
+		console.log("Object received.");
+		cb(null, s3, options, pathname, actions, data.Body);
+	});
+}
+
+function processImage(s3, options, pathname, actions, buffer, cb) {
+	console.log("Processing image...");
+	var file = gm(buffer, actions.path[actions.path.length - 1]); 
+	console.log("Operations to be performed: ");
+	console.log(actions);
+	_.each(actions, function(value, key, list) {
+		if (key === "path") {
+			return;
+		}
+
+		console.log("Performing " + key + " : " + value);
+		file = file[key].apply(file, value); 
+	});
+
+	file.toBuffer(function(err, buffer) {
+		if (err) {
+			return cb(err);
+		}
+
+		console.log("Done!");
+		cb(null, s3, options, pathname, buffer);
+	});
+}
+
+function putObject(s3, options, pathname, buffer, cb) {
+	console.log("Uploading image...");
+
+	options.ACL = "public-read";
+	options.Key = pathname;
+	options.Body = buffer;
+	options.ContentType = mime.lookup(pathname); 
+	console.log(options);
+	s3.putObject(options, function(err, data) {
+		if (err) {
+			return cb(err);
+		}
+
+		console.log("Done!");
+		cb(null, data, buffer);
+	});
+}
+
 /* GET home page. */
 var thumby = function(urlStr, cb) {
 	console.log("Starting thumby process");
@@ -68,80 +125,26 @@ var thumby = function(urlStr, cb) {
 		return cb("Missing pathname of image.");
 	}
 
-	var s3 = new AWS.S3({
+	var ops = async.seq(getObject, processImage, putObject);
+	ops(new AWS.S3({
 		region : config.s3.region,
 		accessKeyId : config.aws.accessKey, 
 		secretAccessKey : config.aws.secretKey,
 		apiVersion : config.aws.apiVersion
-	});
-
-	var key = actions.path.join("/");
-	var options = {
+	}), {
 		Bucket : config.s3.bucket,
-		Key : key
-	};
-
-	console.log(options);
-	async.waterfall([
-		function(next) {
-			console.log("Retrieving object... " + key);
-			
-			s3.getObject(options, function(err, data) {
-				if (err) {
-					return next(err);
-				}
-
-				console.log("Object received.");
-				next(null, data.Body);
-			});
-		},
-		function(buffer, next) {
-			console.log("Processing image...");
-			var file = gm(buffer, actions.path[actions.path.length - 1]); 
-			console.log("Operations to be performed: ");
-			console.log(actions);
-			_.each(actions, function(value, key, list) {
-				if (key === "path") {
-					return;
-				}
-
-				console.log("Performing " + key + " : " + value);
-				file = file[key].apply(file, value); 
-			});
-
-			file.toBuffer(function(err, buffer) {
-				if (err) {
-					return next(err);
-				}
-
-				console.log("Done!");
-				next(null, buffer);
-			});
-		},
-		function(buffer, next) {
-			console.log("Uploading image...");
-
-			options.ACL = "public-read";
-			options.Key = pathname;
-			options.Body = buffer;
-			console.log(options);
-			s3.putObject(options, function(err, data) {
-				if (err) {
-					return next(err);
-				}
-
-				console.log(data);
-
-				console.log("Done!");
-				next();
-			});
-		}
-	], function(err) {
+		Key : actions.path.join("/")
+	}, 
+	pathname,
+	actions,
+	function(err, data, buffer) {
 		if (err) {
 			return cb(err);
 		}
 
-		cb(null, pathname);
+		console.log(data);
+		console.log("Processing all done!");
+		cb(null, pathname, buffer);
 	});
 };
 
