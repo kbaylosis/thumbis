@@ -58,15 +58,34 @@ function parseActions(urlFrag) {
 function getObject(s3, options, pathname, actions, cb) {
 	console.log("Retrieving object... ");
 	console.log(options);
-	
-	s3.getObject(options, function(err, data) {
-		if (err) {
-			return cb(err);
+
+	var fileData;
+	async.detectSeries(options.Buckets, function(item, callback) {
+		console.log("Attempting to retreive from " + item);
+		s3.getObject({
+			Bucket : item,
+			Key : options.Key
+		}, function(err, data) {
+			if (err) {
+				console.error("No object received.");
+				return callback(false);
+			}
+
+			console.log("Object received.");
+			fileData = data;
+			callback(true);
+		});
+	}, function(result) {
+		if (!result) {
+			return cb("File not found!");
 		}
 
-		console.log("Object received.");
-		cb(null, s3, options, pathname, actions, data.Body);
+		cb(null, s3, {
+			Bucket : result,
+			Key : options.Key
+		}, pathname, actions, fileData.Body);
 	});
+	
 }
 
 function processImage(s3, options, pathname, actions, buffer, cb) {
@@ -132,7 +151,7 @@ var thumby = function(urlStr, cb) {
 		secretAccessKey : config.aws.secretKey,
 		apiVersion : config.aws.apiVersion
 	}), {
-		Bucket : config.s3.bucket,
+		Buckets : config.s3.buckets,
 		Key : actions.path.join("/")
 	}, 
 	pathname,

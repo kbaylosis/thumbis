@@ -42,14 +42,14 @@ module.exports = {
 		bucketParam : "[bucket-name]",
 
 		/**
-		 * S3 bucket
+		 * S3 buckets
 		 */
-		bucket : "miimove-thumbnails",
+		buckets : ["---BUCKET---"],
 
 		/**
 		 * Server region
 		 */
-		region : "us-east-1"
+		region : "---REGION---"
 	},
 	
 	/**
@@ -59,6 +59,6 @@ module.exports = {
 		/**
 		 * Cloudfront url
 		 */
-		url : "https://dzbg8ac69eg2r.cloudfront.net",
+		url : "---CLOUDFRONT_URL---",
 	}
 };
