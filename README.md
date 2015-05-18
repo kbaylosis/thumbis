@@ -49,10 +49,10 @@ $crop/<width>/<height>/<x>/<y>/$path/img.png
 	* Create an origin pointing to the S3 bucket in (1). Ensure that it is allowed access to that bucket.
 	* Create an origin pointing to the load balancer in (2)
 	* Create the following Behaviours in exactly the order below:
-		- ‘**/*’	<load balancer in (2)>
-		- ‘**/*.jpg’	<S3 bucket in (1)>
-		- ‘**/*.png’	<S3 bucket in (1)>
-		- ‘**/*.jpeg’	<S3 bucket in (1)>
+		- ‘**/*’ - load balancer in (2)
+		- ‘**/*.jpg’ - S3 bucket in (1)
+		- ‘**/*.png’ - S3 bucket in (1)
+		- ‘**/*.jpeg’ - S3 bucket in (1)
 4. Create a stack in ops-works for the thumb system
 5. Create a Node.js App Server using the load balancer in item (1).
 6. Specify the ‘graphicsmagick’ package under the OS Packages of the Node.js App Server layer.
@@ -60,9 +60,14 @@ $crop/<width>/<height>/<x>/<y>/$path/img.png
 	Size : t2.small or higher
 	Operating System : Ubuntu 14.x7.
 8. Create an app for thumbis with the following settings:
-	Repository URL : <tba>
-	Environment Variables : PORT = 80
-	* Note that the repo url must point to a configured thumbis repo specific to the 	application, which points and is allowed access to the S3 bucket in (1), and the CloudFront distribution in (3).
+	* Repository URL : git@github.com:kbaylosis/thumbis.git
+	* Environment Variables :
+		- PORT = 80
+		- THUMBIS_S3KEY = AWS S3 Access Key
+		- THUMBIS_S3SECRET = AWS S3 Secret Key
+		- THUMBIS_BUCKETS = AWS S3 Bucket Array i.e. ["bucketA", "bucketB", "bucketC"]
+		- THUMBIS_REGION = AWS Bucket region
+		- THUMBIS_CFURL = AWS CloudFront distribution url
 9. Deploy the app.
 10. You may now upload files directly to S3 and read it using the Cloudfront distribution with a thumbnailing capability.
 
