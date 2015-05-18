@@ -1,6 +1,6 @@
 {
-  "name": "thumby",
-  "version": "0.0.1",
+  "name": "thumbis",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"

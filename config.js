@@ -14,12 +14,12 @@ module.exports = {
 		/**
 		 * S3 Access Key
 		 */
-		accessKey : "---ACCESS_KEY---", 
+		accessKey : process.env.THUMBIS_S3KEY || "---ACCESS_KEY---", 
 		
 		/**
 		 * S3 Secret Key
 		 */
-		secretKey : "---SECRET_KEY---",
+		secretKey : process.env.THUMBIS_S3SECRET || "---SECRET_KEY---",
 
 		/**
 		 * API version
@@ -44,12 +44,12 @@ module.exports = {
 		/**
 		 * S3 buckets
 		 */
-		buckets : ["---BUCKET---"],
+		buckets : process.env.THUMBIS_BUCKETS || ["---BUCKET---"],
 
 		/**
 		 * Server region
 		 */
-		region : "---REGION---"
+		region : process.env.THUMBIS_REGION || "---REGION---"
 	},
 	
 	/**
@@ -59,6 +59,7 @@ module.exports = {
 		/**
 		 * Cloudfront url
 		 */
-		url : "---CLOUDFRONT_URL---",
+		url : process.env.THUMBIS_CFURL || "---CLOUDFRONT_URL---",
 	}
 };
+
