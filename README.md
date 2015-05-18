@@ -4,7 +4,7 @@ An opensource node-based thumbnailer server built for the Amazon S3 and CloudFro
 ## Standard Usage
 The gist of performing thumbnail requests to the server is as follows:
 
-```javascript
+```
 http://<server>/$resize/<width>/<height>/$path/<path of the image in the S3 bucket (excluding the bucket name)>
 ```
 
