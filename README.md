@@ -49,7 +49,7 @@ $crop/<width>/<height>/<x>/<y>/$path/img.png
 	* Create an origin pointing to the S3 bucket in (1). Ensure that it is allowed access to that bucket.
 	* Create an origin pointing to the load balancer in (2)
 	* Create the following Behaviours in exactly the order below:
-		- '\*\*/\*' - load balancer in (2)
+		- ‘\*\*/\*’ - load balancer in (2)
 		- ‘\*\*/\*.jpg’ - S3 bucket in (1)
 		- ‘\*\*/\*.png’ - S3 bucket in (1)
 		- ‘\*\*/\*.jpeg’ - S3 bucket in (1)
