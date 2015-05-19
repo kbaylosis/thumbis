@@ -1,5 +1,5 @@
 # thumbis.js
-An opensource node-based thumbnailer server built for the Amazon S3 and CloudFront. It is running on top [gm.js](http://aheckmann.github.io/gm/).
+A powerful opensource node-based thumbnailer server built for the Amazon S3 and CloudFront. It is running on top [gm.js](http://aheckmann.github.io/gm/).
 
 ## Standard Usage
 The gist of performing thumbnail requests to the server is as follows:
