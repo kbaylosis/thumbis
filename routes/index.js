@@ -3,10 +3,10 @@ var router = express.Router();
 var mime = require("mime-types");
 
 var config = require("../config");
-var thumby = require("../thumby/thumby");
+var thumbis = require("../thumbis/thumbis");
 
 router.use(function(req, res) {
-	thumby(req.url, function(err, pathname, buffer) {
+	thumbis(req.url, function(err, pathname, buffer) {
 		if (err) {
 			console.log(err, err.stack);
 			return res.send(404);

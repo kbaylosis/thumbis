@@ -1,4 +1,4 @@
-var debug = require('debug')('thumby');
+var debug = require('debug')('thumbis');
 var app = require('./app');
 
 app.set('port', process.env.PORT || 3000);

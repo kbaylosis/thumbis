@@ -131,8 +131,8 @@ function putObject(s3, options, pathname, buffer, cb) {
 }
 
 /* GET home page. */
-var thumby = function(urlStr, cb) {
-	console.log("Starting thumby process");
+var thumbis = function(urlStr, cb) {
+	console.log("Starting thumbis process");
 
 	var pathname = url.parse(urlStr).pathname.trim();
 	if (pathname[0] === "/") {
@@ -167,4 +167,4 @@ var thumby = function(urlStr, cb) {
 	});
 };
 
-module.exports = thumby;
+module.exports = thumbis;
