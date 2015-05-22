@@ -44,7 +44,7 @@ module.exports = {
 		/**
 		 * S3 buckets
 		 */
-		buckets : process.env.THUMBIS_BUCKETS || ["---BUCKET---"],
+		buckets : eval(process.env.THUMBIS_BUCKETS) || ["---BUCKET---"],
 
 		/**
 		 * Server region
